@@ -26,22 +26,11 @@ public class Proceso extends Thread {
             try {
                 BufferedReader br = new BufferedReader(new FileReader(references));
                 String c=br.readLine();
-                int contador= 0;
                 while (c != null) {
-                    long startTime = System.currentTimeMillis();
-                    long elapsedTime = 0L;
-                    long nowTime=0L;
                     int a = Integer.valueOf(c);
                     readReference(a);
-                    nowTime = System.currentTimeMillis();
-                    elapsedTime = nowTime - startTime;
-                    if (elapsedTime >=2) {
-                        Thread.sleep(2);
-                        startTime = System.currentTimeMillis();
-                    }
-                    System.out.println(contador);
+                    Thread.sleep(2);
                     c=br.readLine();
-                    contador++;
                 }
                 br.close();
                 end = false;
@@ -53,19 +42,11 @@ public class Proceso extends Thread {
             }
         } else {
             while(end){
-                long startTime = System.currentTimeMillis();
-                long elapsedTime = 0L;
-                long nowTime=0L;
                 AggingAlgorithm();
-                nowTime = System.currentTimeMillis();
-                elapsedTime = nowTime - startTime;
-                if (elapsedTime >=1) {
-                    try {
-                        Thread.sleep(1);
-                    } catch (InterruptedException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             } 
 
@@ -84,7 +65,6 @@ public class Proceso extends Thread {
             Boolean tpHit = ram.search(num);
             if (tpHit) {
                 System.out.println("TP hit");
-                time += 30*Math.pow(10, -3);
             } else {
                 System.out.println("TP miss");
                 tlb.add(ram.add(num));
@@ -109,11 +89,6 @@ public class Proceso extends Thread {
             }
             pages.clear();
         }
-        try {
-            Thread.sleep(0);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     public static void main(String[] args) throws Exception {
@@ -122,7 +97,7 @@ public class Proceso extends Thread {
         RAM ram = new RAM(5, 64, agingStructure);
         Proceso proceso = new Proceso(ram, tlb, agingStructure, 0);
         Proceso proceso2 = new Proceso(ram, tlb, agingStructure, 1);
-        Proceso.references="ej_paginas/ej_Baja_64 paginas.txt";
+        Proceso.references="ej_paginas/ej_Alta_64paginas.txt";
         proceso.start();
         proceso2.start();
         proceso.join();
