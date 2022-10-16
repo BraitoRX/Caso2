@@ -23,5 +23,16 @@ public class TLB {
         }
         return false;
     }
+    public void clear() {
+        this.tlb.clear();
+    }
+    public void removePage( int page ) {
+        for ( Hashtable<Integer, Integer> tlbPage : this.tlb ) {
+            if ( tlbPage.containsKey( page ) ) {
+                int pos = tlbPage.get( page );
+                tlbPage.remove( page );
+            }
+        }
+    }
     
 }

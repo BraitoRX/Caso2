@@ -1,78 +1,73 @@
-import java.util.Hashtable;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.ArrayList;
+
 
 public class AgingStructure {
-    private Hashtable<Integer, Queue<String>> agingStructure;
-    static Boolean[] agingStructureStatus;
-    private int maxValueQueue;
-    public AgingStructure(int maxValueQueue,int numberOfQueues){
-        this.maxValueQueue = maxValueQueue;
-        this.agingStructure = new Hashtable<>();
-        agingStructureStatus = new Boolean[numberOfQueues];
-        for (int i = 0; i < numberOfQueues; i++) {
-            Queue<String> queue = new LinkedList<>();
-            for(int j = 0; j < maxValueQueue; j++){
-                queue.add("0");
-            }
-            this.agingStructure.put(i, queue);
-            agingStructureStatus[i] = false;
-        }
+    private int[] agingStructure;
+
+    public AgingStructure(int sizeTP){
+        this.agingStructure = new int[sizeTP];
     }
-    public void reference(int page){
-        Queue<String> queue = agingStructure.get(page);
-        queue.remove();
-        queue.add("1");
-        agingStructureStatus[page] = true;
-    }
-    public void referenceFalses(){
-        for (int i = 0; i < agingStructureStatus.length; i++) {
-            if(!agingStructureStatus[i]){
-                Queue<String> queue = agingStructure.get(i);
-                queue.remove();
-                queue.add("0");
-            }
-            agingStructureStatus[i] = false;
-        }
-    }
-    public int getBestPage(TP tp) {
-        int provePage = 0;
-        int bestPageValue = -1;
-        while ( provePage < agingStructure.size()) {
-            if (tp.search(provePage)){
-                if ( bestPageValue == -1  ) {
-                    bestPageValue = provePage;
+    public void reference(ArrayList<Integer> reference){
+        Integer i=0;
+        for (int j = 0; j < agingStructure.length; j++) {
+                i= agingStructure[j];
+                if(reference.contains(j)){
+                    i=i>>>1;
+                    i+= -2147483648;
                 }
-                else {
-                    Queue<String> queue = agingStructure.get(provePage);
-                    String[] prove_string=queue.toArray(String[]::new);
-                    Queue<String> bestQueue = agingStructure.get(bestPageValue);
-                    String[] best_string=bestQueue.toArray(String[]::new);
-                    // print bestPageValue
-                    String a="";
-                    for (int i = maxValueQueue-1; i >= 0; i--) {
-                        a+=best_string[i];
+                else{
+                    i=i>>>1;
+                }
+                agingStructure[j]=i;
+                // System.out.println(j+" "+ String.format("%32s", 
+                // Integer.toBinaryString(i)).replaceAll(" ", "0"));
+                
+        }
+    }
+    public int getBestPage(RAM ram) {
+        int min=-1;
+        int pos=0;
+        int[] ramArray = ram.getRAM();
+        Boolean not_yet=false;
+        for (int j = 0; j < ramArray.length; j++) {
+            int posVP=ramArray[j];
+            int bits=agingStructure[posVP];
+            // System.out.println("BITS: " + String.format("%32s", 
+            // Integer.toBinaryString(bits)).replaceAll(" ", "0")+ " "+posVP);
+            // System.out.println("MIN: " + String.format("%32s", 
+            // Integer.toBinaryString(min)).replaceAll(" ", "0") + " "+pos);
+            if ( !not_yet ) {
+                min=bits;
+                not_yet = true;
+                pos=posVP;
+            } else {
+                if (min<0) {
+                    if (bits>0) {
+                        min=bits;
+                        pos=posVP;
                     }
-                    //System.out.println("bestPageValue: "+bestPageValue+" "+a);
-                    //print provePage
-                    String b="";
-                    for (int i = maxValueQueue-1; i >= 0; i--) {
-                        b+=prove_string[i];
-                    }
-                    //System.out.println("provePage: "+provePage+" "+b);
-                    for (int i = maxValueQueue-1; i >= 0; i--) {
-                        if ( prove_string[i].equals("0") && best_string[i].equals("1") ) {
-                            bestPageValue = provePage;
-                            break;
+                    else{
+                        min=Math.min(min, bits);
+                        if (min==bits) {
+                            pos=posVP;
                         }
                     }
-                    
+                }
+                else{
+                    if (bits>0) {
+                        min=Math.min(min, bits);
+                        if (min==bits) {
+                            pos=posVP;
+                        }
+                    }
+                    if (bits==0 && min!=0){
+                        min=bits;
+                        pos=posVP;
+                    }
                 }
             }
-            provePage++;
         }
-        return bestPageValue;
+        return pos;
     }
-    
     
 }

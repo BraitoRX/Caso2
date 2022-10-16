@@ -15,6 +15,10 @@ public class TP {
     public boolean search(int page) {
         return this.TP[page] != -1;
     }
-
+    public void clear() {
+        for ( int i = 0; i < TP.length; i++ ) {
+            this.TP[i] = -1;
+        }
+    }
     
 }

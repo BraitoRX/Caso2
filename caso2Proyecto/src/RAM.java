@@ -18,7 +18,8 @@ public class RAM {
             RAMfree.add(i);
         }
     }
-    public Hashtable<Integer, Integer> add( int page ) {
+    
+    public Hashtable<Integer, Integer> add( int page,TLB tlb ) {
         Integer pos =RAMfree.poll();
         Hashtable<Integer, Integer> pageTable = new Hashtable<Integer, Integer>();
         if ( pos != null ) {
@@ -27,14 +28,18 @@ public class RAM {
             pageTable.put( page, pos );
         }
         else {
-            synchronized(replace){
-                int page_to_replace = replace.getBestPage(tp);
-                int pos_to_replace = tp.searchPos(page_to_replace);
-                this.RAM[pos_to_replace] = page;
-                tp.add(page, pos_to_replace);
-                tp.add(page_to_replace, -1);
-                pageTable.put( page, pos_to_replace);
-            }
+                synchronized (replace) {
+                    int page_to_replace = replace.getBestPage(this);
+                    int pos_to_replace = tp.searchPos(page_to_replace);
+                    this.RAM[pos_to_replace] = page;
+                    tp.add(page, pos_to_replace);
+                    tp.add(page_to_replace, -1);
+                    
+                    pageTable.put( page, pos_to_replace);
+                    tlb.removePage(page_to_replace);
+                }
+                
+                
         }
         return pageTable;
     }
@@ -44,5 +49,7 @@ public class RAM {
     public int get( int frame ) {
         return this.RAM[frame];
     }
-    
+    public int[] getRAM() {
+        return RAM;
+    }
 }
