@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 public class Proceso extends Thread {
     static Double time = 0D;
+    static Double timeTrad = 0D;
     static String references;
     private RAM ram;
     private TLB tlb;
@@ -61,9 +62,11 @@ public class Proceso extends Thread {
         if (tlbHit) {
             // System.out.println("TLB hit");
             time += 2*Math.pow(10, -6);
+            timeTrad += 2*Math.pow(10, -6);
         } else {
             // System.out.println("TLB miss");
             time += 30*Math.pow(10, -6);
+            timeTrad += 30*Math.pow(10, -6);
             Boolean tpHit = ram.search(num);
             if (tpHit) {
                 // System.out.println("TP hit");
@@ -73,6 +76,7 @@ public class Proceso extends Thread {
                 pageFaults++;
                 time +=10;
                 time += 30*Math.pow(10, -6);
+                timeTrad += 30*Math.pow(10, -6);
             }
 
         }
@@ -117,5 +121,6 @@ public class Proceso extends Thread {
         proceso2.join();
         System.out.println("Tiempo total: " + time*Math.pow(10, 6));
         System.out.println("Page Faults: " +  pageFaults);
+        System.out.println("Tiempo en resolución de direcciones: " + timeTrad*Math.pow(10, 6));
     }
 }
