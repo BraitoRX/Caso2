@@ -36,6 +36,9 @@ public class AgingStructure {
             // Integer.toBinaryString(bits)).replaceAll(" ", "0")+ " "+posVP);
             // System.out.println("MIN: " + String.format("%32s", 
             // Integer.toBinaryString(min)).replaceAll(" ", "0") + " "+pos);
+            if (bits==0){
+                return posVP;
+            }
             if ( !not_yet ) {
                 min=bits;
                 not_yet = true;

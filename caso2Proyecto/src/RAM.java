@@ -52,4 +52,5 @@ public class RAM {
     public int[] getRAM() {
         return RAM;
     }
+    
 }
