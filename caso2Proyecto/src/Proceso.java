@@ -100,7 +100,7 @@ public class Proceso extends Thread {
     public static void main(String[] args) throws Exception {
         
         Scanner input= new Scanner(System.in);
-        System.out.println("Ingrese el nombre del archivo de referencias si alta o baja");
+        System.out.println("Ingrese el nombre del archivo de referencias si alta o baja, o medio para los casos de prueba 2.");
         references=input.nextLine();
         if (references.equals("alta")) {
             references="ej_paginas/ej_Alta_64paginas.txt";
