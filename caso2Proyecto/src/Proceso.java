@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 public class Proceso extends Thread {
     static Double time = 0D;
+    static Double time2 = 0D;
     static String references;
     private RAM ram;
     private TLB tlb;
@@ -58,21 +59,26 @@ public class Proceso extends Thread {
     public void readReference(int num) {
         
         Boolean tlbHit = tlb.search(num);
+        time += 30*Math.pow(10, -6);// tiempo de respuesta en RAM.
         if (tlbHit) {
             // System.out.println("TLB hit");
-            time += 2*Math.pow(10, -6);
+            time += 2*Math.pow(10, -6); // tiempo de busqueda en TLB
+            time2 += 2*Math.pow(10, -6); // tiempo de busqueda en TLB
         } else {
             // System.out.println("TLB miss");
-            time += 30*Math.pow(10, -6);
             Boolean tpHit = ram.search(num);
+            time += 30*Math.pow(10, -6);// tiempo de buscar en la tp
+            time2 += 30*Math.pow(10, -6); // tiempo de busqueda en tp
             if (tpHit) {
                 // System.out.println("TP hit");
             } else {
                 // System.out.println("TP miss");
+                
                 tlb.add(ram.add(num,tlb));
                 pageFaults++;
                 time +=10;
-                time += 30*Math.pow(10, -6);
+                time += 30*Math.pow(10, -6);// tiempo de buscar en la tp
+                time2 += 30*Math.pow(10, -6);// tiempo de busqueda en la tp
             }
 
         }
@@ -101,6 +107,13 @@ public class Proceso extends Thread {
         }else if (references.equals("baja")) {
             references="ej_paginas/ej_Baja_64 paginas.txt";
         }
+        else if (references.equals("medio")) {
+            references="ej_paginas/test_B2_R32_P8.txt";
+        }
+        else{
+            System.out.println("No existe el archivo");
+            System.exit(0);
+        }
         System.out.println("Ingrese el tamaño de la memoria RAM");
         int RAMsize=input.nextInt();
         System.out.println("Ingrese el tamaño de la memoria TLB");
@@ -115,7 +128,8 @@ public class Proceso extends Thread {
         proceso2.start();
         proceso.join();
         proceso2.join();
-        System.out.println("Tiempo total: " + time*Math.pow(10, 6));
+        System.out.println("Tiempo total carga: " + time*Math.pow(10, 6));
+        System.out.println("Tiempo total direcciones: " + time2*10e6);
         System.out.println("Page Faults: " +  pageFaults);
     }
 }
