@@ -103,12 +103,12 @@ public class Proceso extends Thread {
         System.out.println("Ingrese el nombre del archivo de referencias si alta o baja, o medio para los casos de prueba 2.");
         references=input.nextLine();
         if (references.equals("alta")) {
-            references="ej_paginas/ej_Alta_64paginas.txt";
+            references="ej_Alta_64paginas.txt";
         }else if (references.equals("baja")) {
-            references="ej_paginas/ej_Baja_64 paginas.txt";
+            references="ej_Baja_64 paginas.txt";
         }
         else if (references.equals("medio")) {
-            references="ej_paginas/test_B2_R32_P8.txt";
+            references="test_B2_R32_P8.txt";
         }
         else{
             System.out.println("No existe el archivo");
